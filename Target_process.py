@@ -20,7 +20,7 @@ class Target_process(object):
 
         self.action = self.env.process(self.run())
 
-        for key, value in self.params.iteritems():
+        for key, value in self.params.items():
             self.debug(self.name, 'Created with %s = %s' % (key, value))
 
     # ----------------------------------------------------------------------------------------

@@ -1,19 +1,16 @@
-__author__ = 'shahargino'
+#!/usr/bin/env python
+#  __  __      _        ___         _      _
+# |  \/  |__ _(_)_ _   / __| __ _ _(_)_ __| |_
+# | |\/| / _` | | ' \  \__ \/ _| '_| | '_ \  _|
+# |_|  |_\__,_|_|_||_| |___/\__|_| |_| .__/\__|
+#                                    |_|
 
-# '||\   /||`                          .|'''|                              ||
-#  ||\\.//||           ''              ||                    ''            ||
-#  ||     ||   '''|.   ||  `||''|,     `|'''|, .|'', '||''|  ||  '||''|, ''||''
-#  ||     ||  .|''||   ||   ||  ||      .   || ||     ||     ||   ||  ||   ||
-# .||     ||. `|..||. .||. .||  ||.     |...|' `|..' .||.   .||.  ||..|'   `|..'
-#                                                                 ||
-#                                                                .||
-
-import include as inc
-from Auxiliary import Auxiliary
-from Fabric import Fabric
-from Initiator_process import Initiator_process as Initiator
-from Target_process import Target_process as Target
 import simpy
+import include as inc
+from Fabric import Fabric
+from Auxiliary import Auxiliary
+from Target_process import Target_process as Target
+from Initiator_process import Initiator_process as Initiator
 
 
 def main():
@@ -59,14 +56,14 @@ def main():
         'PCIE': Initiator('PCIE', inc.initiators_params['PCIE'], tb)
     }
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Create Targets:
     tb['TARGETS'] = {
         'SRAM': Target('SRAM', inc.targets_params['SRAM'], tb),
         'ROM':  Target('ROM', inc.targets_params['ROM'], tb)
     }
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Create Fabric:
     tb['FABRIC'] = Fabric('DATA', inc.fabric_params, tb)
 
@@ -79,4 +76,7 @@ def main():
 
     aux.timestamp(__name__, "Run Phase completed")
 
-main()
+
+if __name__ == "__main__":
+
+    main()

@@ -1,9 +1,8 @@
 __author__ = 'shahargino'
 
-
+import simpy
 from Initiator_procedure import Initiator_procedure
 from Initiator_queue import Initiator_queue
-import simpy
 
 
 class Initiator_process(object):
@@ -31,21 +30,21 @@ class Initiator_process(object):
         self.error = tb['AUX'].error
 
         self.procedures = {}
-        for procedure_name, procedure_params in self.params['PROCEDURES'].iteritems():
+        for procedure_name, procedure_params in self.params['PROCEDURES'].items():
             self.procedures[procedure_name] = Initiator_procedure(name + "_" + procedure_name, procedure_params, self.clk_ns, tb)
 
         self.queues = {}
-        for queue_name, queue_params in self.params['QUEUES'].iteritems():
+        for queue_name, queue_params in self.params['QUEUES'].items():
             self.queues[queue_name] = Initiator_queue(name + "_" + queue_name, queue_params, self.clk_ns, tb)
 
-        for procedure_name, procedure in self.procedures.iteritems():
+        for procedure_name, procedure in self.procedures.items():
             queue = self.queues[procedure.get_queue_name()]
             procedure.bind_queue(queue)
             queue.bind_procedure(procedure_name, procedure)
 
         self.action = self.env.process(self.run())
 
-        for key, value in self.params.iteritems():
+        for key, value in self.params.items():
             self.debug(self.name, 'Created with %s = %s' % (key, value))
 
     # ----------------------------------------------------------------------------------------
@@ -62,7 +61,7 @@ class Initiator_process(object):
 
                 yield self.env.timeout(self.clk_ns)
 
-                for queue_name, queue in self.queues.iteritems():
+                for queue_name, queue in self.queues.items():
                     self.debug(self.name, 'Queue "%s" fullness: %d / %d' % (queue_name, queue.get_fullness(), queue.get_quota()))
 
             except simpy.Interrupt as interrupt:

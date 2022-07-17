@@ -1,9 +1,8 @@
 __author__ = 'shahargino'
 
-
+import simpy
 from Fabric_socket import Fabric_socket
 from Fabric_arbiter import Fabric_arbiter
-import simpy
 
 
 class Fabric(object):
@@ -19,26 +18,26 @@ class Fabric(object):
 
         self.initiators = {}
         self.queues = {}
-        for initiator_name, initiator in tb['INITIATORS'].iteritems():
+        for initiator_name, initiator in tb['INITIATORS'].items():
             self.initiators[initiator_name] = initiator
             self.queues[initiator_name] = initiator.get_queues()
 
         self.targets = {}
-        for target_name, target in tb['TARGETS'].iteritems():
+        for target_name, target in tb['TARGETS'].items():
             self.targets[target_name] = target
 
         self.debug = tb['AUX'].debug
         self.error = tb['AUX'].error
 
         self.sockets = {}
-        for socket_name, socket_params in self.params['SOCKETS'].iteritems():
+        for socket_name, socket_params in self.params['SOCKETS'].items():
             self.sockets[socket_name] = Fabric_socket(socket_name, socket_params, self, tb)
 
         self.arbiter = Fabric_arbiter(self.params['ARBITER'], tb)
 
         self.action = self.env.process(self.run())
 
-        for key, value in self.params.iteritems():
+        for key, value in self.params.items():
             self.debug(self.name, 'Created with %s = %s' % (key, value))
 
     # ----------------------------------------------------------------------------------------
@@ -52,7 +51,7 @@ class Fabric(object):
                 # Manage "Grants" for initiator sockets:
                 granted = self.arbiter.get_granted()
 
-                for socket_name, socket in self.sockets.iteritems():
+                for socket_name, socket in self.sockets.items():
                     if socket.is_initiator():
                         socket.set_grant(socket_name == granted)
 
@@ -68,7 +67,7 @@ class Fabric(object):
                     )
 
                 elif int_cause[0] == 'SOCKET_GRANTED':
-                    for queue_name, queue in self.queues[int_cause[1]].iteritems():
+                    for queue_name, queue in self.queues[int_cause[1]].items():
                         self.debug(self.name, "Dequeue from %s" % queue_name)
                         self.env.process( queue.dequeue(self) )
 

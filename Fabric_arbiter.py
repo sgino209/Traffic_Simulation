@@ -27,13 +27,13 @@ class Fabric_arbiter:
 
         self.action = self.env.process(self.run())
 
-        for key, value in self.params.iteritems():
+        for key, value in self.params.items():
             self.debug(self.name, ' Created with %s = %s' % (key, value))
 
     # ----------------------------------------------------------------------------------------
     def get_granted(self):
 
-        return self.initiators[self.granted]
+        return list(self.initiators)[self.granted]
 
     # ----------------------------------------------------------------------------------------
     def run(self):
@@ -43,5 +43,5 @@ class Fabric_arbiter:
             yield self.env.timeout(self.params['SLOT_LENGTH'])
 
             self.debug(self.name, 'Slot #%s (%d out of %d) granted' %
-                       (self.initiators[self.granted], self.granted, len(self.initiators)))
+                       (list(self.initiators)[self.granted], self.granted, len(self.initiators)))
             self.granted = (self.granted + 1) % len(self.initiators)
